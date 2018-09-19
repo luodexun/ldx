@@ -1,0 +1,22 @@
+{
+  "name": "kk",
+  "version": "1.0.0",
+  "description": "this is test project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ali-oss": "^6.0.1",
+    "art-template": "^4.13.0",
+    "jquery": "^3.3.1",
+    "koa": "^2.5.3",
+    "koa-art-template": "^1.1.1",
+    "koa-cors": "0.0.16",
+    "koa-route": "^3.2.0",
+    "koa-router": "^7.4.0"
+  }
+}
