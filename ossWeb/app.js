@@ -1,6 +1,6 @@
 'use strict';
 
-var appServer = '192.168.154.145:3000';
+var appServer = 'https://api.letmexiu.com';
 var bucket = 'luodexun';
 var region = 'oss-cn-beijing';
 
@@ -8,6 +8,9 @@ var urllib = OSS.urllib;
 var Buffer = OSS.Buffer;
 var OSS = OSS.Wrapper;
 var STS = OSS.STS;
+var req={
+    Action:'Aliyun/getSts'
+};
 
 // Play without STS. NOT SAFE! Because access key id/secret are
 // exposed in web page.
@@ -25,21 +28,31 @@ var STS = OSS.STS;
 
 var applyTokenDo = function (func) {
   var url = appServer;
-  return urllib.request(url, {
-    method: 'GET'
-  }).then(function (result) {
-    var creds = JSON.parse(result.data).credentials;
-    console.log(creds);
-    var client = new OSS({
-      region: region,
-      accessKeyId: creds.AccessKeyId,
-      accessKeySecret: creds.AccessKeySecret,
-      stsToken: creds.SecurityToken,
-      bucket: bucket
+    $.ajax({
+        url:url,
+        type:'POST',
+        timeout: 10000, // 超时时间 10 秒
+        headers: {
+            'Content-Type':'application/json'
+        },
+        data:JSON.stringify(req),
+        success: function(data){
+          if(data.returnCode=1000){
+              var creds=data.returnData;
+              var client = new OSS({
+                  region: region,
+                  accessKeyId: creds.AccessKeyId,
+                  accessKeySecret: creds.AccessKeySecret,
+                  stsToken: creds.SecurityToken,
+                  bucket: bucket
+              })
+              return func(client);
+          }
+
+        }
     });
 
-    return func(client);
-  });
+
 };
 
 var progress = function (p) {
